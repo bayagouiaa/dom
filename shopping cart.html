@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .cart-container {
+            width: 80%;
+            max-width: 800px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .item-price {
+            color: #888;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-control button {
+            background-color: #eee;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .quantity-control input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ddd;
+            margin: 0 5px;
+            font-size: 16px;
+        }
+
+        .like-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #888;
+        }
+
+        .like-button.liked {
+            color: red;
+        }
+
+        .delete-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .delete-button:hover {
+            color: red;
+        }
+
+        .total-price {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h1>Shopping Cart</h1>
+        <div class="cart-item" data-price="19.99">
+            <div class="item-info">
+                <p class="item-name">Item 1</p>
+                <p class="item-price">$19.99</p>
+            </div>
+            <div class="item-actions">
+                <div class="quantity-control">
+                    <button class="quantity-decrease">-</button>
+                    <input type="number" class="quantity-input" value="1" min="1">
+                    <button class="quantity-increase">+</button>
+                </div>
+                <button class="like-button">&#9829;</button>
+                <button class="delete-button">&#10005;</button>
+            </div>
+        </div>
+
+        <div class="cart-item" data-price="9.99">
+            <div class="item-info">
+                <p class="item-name">Item 2</p>
+                <p class="item-price">$9.99</p>
+            </div>
+            <div class="item-actions">
+                <div class="quantity-control">
+                    <button class="quantity-decrease">-</button>
+                    <input type="number" class="quantity-input" value="1" min="1">
+                    <button class="quantity-increase">+</button>
+                </div>
+                <button class="like-button">&#9829;</button>
+                <button class="delete-button">&#10005;</button>
+            </div>
+        </div>
+
+        <div class="total-price">
+            Total: $29.98
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.quantity-decrease').forEach(button => {
+            button.addEventListener('click', () => {
+                const input = button.nextElementSibling;
+                let value = parseInt(input.value);
+                if (value > 1) {
+                    input.value = value - 1;
+                    updateTotal();
+                }
+            });
+        });
+
+        document.querySelectorAll('.quantity-increase').forEach(button => {
+            button.addEventListener('click', () => {
+                const input = button.previousElementSibling;
+                let value = parseInt(input.value);
+                input.value = value + 1;
+                updateTotal();
+            });
+        });
+
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', () => {
+                button.closest('.cart-item').remove();
+                updateTotal();
+            });
+        });
+
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.toggle('liked');
+            });
+        });
+
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.cart-item').forEach(item => {
+                const price = parseFloat(item.dataset.price);
+                const quantity = parseInt(item.querySelector('.quantity-input').value);
+                total += price * quantity;
+            });
+            document.querySelector('.total-price').textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        // Initialize total
+        updateTotal();
+    </script>
+</body>
+</html>
